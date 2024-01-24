@@ -34,7 +34,7 @@ $logFile = ".\PatchWinREScript_2004plus.txt"
 function LogMessage([string]$message)
 {
     $message = "$([DateTime]::Now) - $message"
-    Write-Host $message | Out-File $logFile
+    Write-Output $message | Out-File $logFile
 }
 
 function IsTPMBasedProtector
