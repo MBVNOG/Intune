@@ -76,4 +76,4 @@ Get-File -Url $updateUrl -OutputPath "$downloadPath\update.cab"
 
 # Voer het script uit met het pad naar het gedownloade .cab bestand
 Set-Location $downloadPath
-& ".\$scriptName" -packagePath ".\update.cab"
+& ".\$scriptName" -packagePath ".\update.cab" -WorkDir $downloadPath
