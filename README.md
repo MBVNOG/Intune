@@ -1,4 +1,4 @@
-Script to deploy the microsoft hotfix that fixes the issues from KB5034441 with the Win RE update.
+# Script to deploy the microsoft hotfix that fixes the issues from KB5034441 with the Win RE update.
 
 Create a Windows remediation, with adding the detect and remediate script into the remediation.
 The 3rd script is made by Microsoft to fix this issue.
