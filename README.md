@@ -1,8 +1,10 @@
-Script to deploy the microsoft hotfix that fixes the issues from KB5034441 with the Win RE update
+Script to deploy the microsoft hotfix that fixes the issues from KB5034441 with the Win RE update.
 
 Create a Windows remediation, with adding the detect and remediate script into the remediation.
 The 3rd script is made by Microsoft to fix this issue.
-The detect script checks if the hotfix is installed. If noet, the remediation script runs the 3rd script via Intune to fix this issue.
+
+The detect script checks if the hotfix is installed. 
+If not, the remediation script runs the 3rd script via Intune to fix this issue.
 
 ################################################################################################
 #
