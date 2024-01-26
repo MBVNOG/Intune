@@ -36,7 +36,7 @@ Write-Output "Logfile for PatchWinREScript_2004plus.ps1" | Out-File $logFile
 function LogMessage([string]$message)
 {
     $message = "$([DateTime]::Now) - $message"
-    Write-Output $message | Out-File $logFile
+    Write-Output $message | Out-File $logFile -append
 }
 
 function IsTPMBasedProtector
