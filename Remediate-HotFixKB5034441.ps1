@@ -7,7 +7,7 @@
 #=============================================================================================================================
 # Main script
 
-# Variabelen
+# Variabeles
 $scriptName = "PatchWinREScript_2004plus.ps1"
 $ScriptUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/PatchWinREScript_2004plus.ps1"
 $updateUrl = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2024/01/windows10.0-kb5034232-x64_ff4651e9e031bad04f7fa645dc3dee1fe1435f38.cab"
@@ -16,7 +16,7 @@ $downloadPath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Remediation\
 
 $logFile = "$downloadPath\log.txt"
 
-# Functie om de verbinding te controleren
+# Function to check connection
 function Test-ConnectionToUrl {
     param (
         [Parameter(Mandatory=$true)]
@@ -33,7 +33,7 @@ function Test-ConnectionToUrl {
     }
 }
 
-# Functie om het script en de update te downloaden
+# Function to download script and .cab file
 function Get-File {
     param (
         [Parameter(Mandatory=$true)]
@@ -45,16 +45,16 @@ function Get-File {
     for ($i = 1; $i -le $maxAttempts; $i++) {
         try {
             Invoke-WebRequest -Uri $Url -OutFile $OutputPath
-            Add-Content -Path $logFile -Value "Download geslaagd: $Url"
+            Add-Content -Path $logFile -Value "Download succeeded: $Url"
             break
         }
         catch {
             if ($i -eq $maxAttempts) {
-                Add-Content -Path $logFile -Value "Download mislukt na $maxAttempts pogingen: $Url"
+                Add-Content -Path $logFile -Value "Download failed after $maxAttempts attempts: $Url"
                 throw
             }
             if (!(Test-ConnectionToUrl -Url $Url)) {
-                Add-Content -Path $logFile -Value "Verbinding mislukt, probeer het opnieuw..."
+                Add-Content -Path $logFile -Value "Connection failed, please retry..."
                 Start-Sleep -Seconds 5
             }
             else {
@@ -64,16 +64,16 @@ function Get-File {
     }
 }
 
-# Maak de downloadmap aan als deze niet bestaat
+# Create downloadfolder if it doesn't exist
 if (!(Test-Path -Path $downloadPath)) {
     New-Item -ItemType Directory -Path $downloadPath | Out-Null
-    Add-Content -Path $logFile -Value "Downloadmap aangemaakt: $downloadPath"
+    Add-Content -Path $logFile -Value "Downloadfolder created: $downloadPath"
 }
 
-# Download het script en de update
+# Download script and update
 Get-File -Url $scriptUrl -OutputPath "$downloadPath\$scriptName"
 Get-File -Url $updateUrl -OutputPath "$downloadPath\update.cab"
 
-# Voer het script uit met het pad naar het gedownloade .cab bestand
+# Execute script with path to .cab file and working dir
 Set-Location $downloadPath
 & ".\$scriptName" -packagePath ".\update.cab" -WorkDir $downloadPath
