@@ -8,7 +8,8 @@
 # Main script
 
 # Variabeles
-$scriptName = "PatchWinREScript_2004plus.ps1"
+#$scriptName = "PatchWinREScript_2004plus.ps1" # Use this one for newer windows versions 10 2004 + and 11
+$ScriptName = "PatchWinREScript_General.ps1" # If the above doesn't work or you have older Windows 10 1909 and beyond, use this one
 $ScriptUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/PatchWinREScript_2004plus.ps1"
 $updateUrl = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2024/01/windows10.0-kb5034232-x64_ff4651e9e031bad04f7fa645dc3dee1fe1435f38.cab"
 
