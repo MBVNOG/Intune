@@ -15,7 +15,7 @@ $updateUrl = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/s
 
 $downloadPath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Remediation\HotFixKB5034441"
 
-$logFile = "$downloadPath\log.txt"
+$logFile = "$downloadPath\Remediate-HotFixKB5034441.txt"
 
 # Function to check connection
 function Test-ConnectionToUrl {
@@ -58,9 +58,7 @@ function Get-File {
                 Add-Content -Path $logFile -Value "Connection failed, please retry..."
                 Start-Sleep -Seconds 5
             }
-            else {
-                throw
-            }
+            else {throw}
         }
     }
 }
