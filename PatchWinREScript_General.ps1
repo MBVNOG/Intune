@@ -31,8 +31,8 @@ Param (
 # Help functions
 # ------------------------------------
 # Log message
-$logFile = ".\PatchWinREScript_2004plus.txt"
-Write-Output "Logfile for PatchWinREScript_2004plus.ps1" | Out-File $logFile
+$logFile = ".\PatchWinREScript_General.txt"
+Write-Output "Logfile for PatchWinREScript_General.ps1" | Out-File $logFile
 
 function LogMessage([string]$message)
 {
