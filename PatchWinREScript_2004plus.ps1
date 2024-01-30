@@ -334,6 +334,7 @@ else
 }
 else{LogMessage("Mount failed: " + $LASTEXITCODE)}
 
-# Cleanup Mount directory in the end
+<# Cleanup Mount directory in the end
+disabled for testing and troubleshooting
 LogMessage("Delete mount directory")
-Remove-Item $mountDir -Recurse
+Remove-Item $mountDir -Recurse#>
