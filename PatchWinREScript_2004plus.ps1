@@ -202,12 +202,12 @@ function PatchPackage([string]$mountDir, [string]$packagePath)
 {
     # Exam target binary
     $hasUpdated =TargetfileVersionExam($mountDir)
-    if ($hasUpdated)
+    <#if ($hasUpdated)
     {
         LogMessage("The update has already been added to WinRE")
         SetRegistrykeyForSuccess
         return $False
-    }
+    }#>
     # Add package
     LogMessage("Apply package:" + $packagePath)
     Dism /Add-Package /Image:$mountDir /PackagePath:$packagePath
