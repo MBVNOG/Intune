@@ -32,7 +32,7 @@ Param (
 # ------------------------------------
 # Log message
 $logFile = ".\PatchWinREScript_General.txt"
-Write-Output "Logfile for PatchWinREScript_General.ps1" | Out-File $logFile
+if (-not (Test-Path $logFile)) {Write-Output "Logfile for PatchWinREScript_General.ps1" | Out-File $logFile}
 
 function LogMessage([string]$message)
 {
