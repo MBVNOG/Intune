@@ -78,7 +78,9 @@ Get-File -Url $updateUrl -OutputPath "$downloadPath\update.cab"
 $WinREStatus = reagentc /info | Select-String "Windows RE status"
 if ($WinREStatus -match "Disabled") {
     # Enable WinRE
+     Add-Content -Path $logFile -Value "Enabling WinRE"
     reagentc /enable
+    Add-Content -Path $logFile -Value $(reagentc /info)
 }
 
 # Execute script with path to .cab file and working dir
