@@ -65,7 +65,7 @@ function IsTPMBasedProtector
             break
         }
         ("2"){
-            LogMessage("Uknown")
+            LogMessage("Unknown")
             break
         }
             default{
@@ -363,6 +363,7 @@ if ($LASTEXITCODE -eq 0)
 }
 else{LogMessage("Mount failed: " + $LASTEXITCODE)}
 
-# Cleanup Mount directory in the end
-LogMessage("Delete mount direcotry")
-Remove-Item $mountDir -Recurse
+<# Cleanup Mount directory in the end
+Disabled this step for testing purposes
+LogMessage("Delete mount directory")
+Remove-Item $mountDir -Recurse #>
