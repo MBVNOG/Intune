@@ -6,6 +6,22 @@
 #=============================================================================================================================
 # Main script
 
+if (Test-Path HKLM:\Software\Microsoft\PushButtonReset)
+{
+    $values = Get-ItemProperty -Path HKLM:\Software\Microsoft\PushButtonReset
+    if (!(-not $values))
+    {
+        if (Get-Member -InputObject $values -Name WinREPathScriptSucceed)
+        {
+            $value = Get-ItemProperty -Path HKLM:\Software\Microsoft\PushButtonReset -Name WinREPathScriptSucceed
+            if ($value.WinREPathScriptSucceed -eq 1)
+            {
+                LogMessage("This script was previously run successfully")
+                exit 0
+            }
+        }
+    }
+}
 # Detect if Hotfix KB5034441 is installed
 $Update = Get-HotFix -Id KB5034441 -ErrorAction SilentlyContinue
 if ($Update -eq $null) {
