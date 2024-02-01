@@ -363,7 +363,7 @@ if ($LASTEXITCODE -eq 0)
 }
 else{LogMessage("Mount failed: " + $LASTEXITCODE)}
 
-<# Cleanup Mount directory in the end
-Disabled this step for testing purposes
+# Cleanup Mount directory in the end
+# Disable this step for testing purposes by adding a "<" as first character to this line
 LogMessage("Delete mount directory")
 Remove-Item $mountDir -Recurse #>
