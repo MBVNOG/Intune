@@ -71,8 +71,9 @@ if (!(Test-Path -Path $downloadPath)) {
 }
 
 # Download script and update
-Get-File -Url $scriptUrl -OutputPath "$downloadPath\$scriptName"
-Get-File -Url $updateUrl -OutputPath "$downloadPath\update.cab"
+Set-Location $downloadPath
+Get-File -Url $scriptUrl -OutputPath ".\$scriptName"
+Get-File -Url $updateUrl -OutputPath ".\update.cab"
 
 # Check if Win RE is enable and if not, enable it
 # Check if WinRE is enabled
@@ -85,13 +86,12 @@ if ($WinREStatus -match "Disabled") {
 }
 $WinREStatus = reagentc /info | Select-String "Windows RE status"
 if ($WinREStatus -match "Enabled") {} Else {
-    Get-File -Url $FixUrl -OutputPath "$downloadPath\$FixName"
-    mkdir "$downloadPath\Backup"
+    Get-File -Url $FixUrl -OutputPath ".\$FixName"
+    mkdir ".\Backup"
     Add-Content -Path $logFile -Value "Created folder $downloadPath\Backup"
-    & ".\$FixName" -BackupFolder "$downloadPath\Backup" #-SkipConfirmation $True
+    & ".\$FixName" -BackupFolder ".\Backup" #-SkipConfirmation $True
     Add-Content -Path $logFile -Value "Run $FixName"
     }
     
 # Execute script with path to .cab file and working dir
-Set-Location $downloadPath
 & ".\$scriptName" -packagePath ".\update.cab" -WorkDir $downloadPath
