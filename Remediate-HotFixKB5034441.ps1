@@ -10,9 +10,10 @@
 # Variabeles
 #$scriptName = "PatchWinREScript_2004plus.ps1" # Use this one for newer windows versions 10 2004 + and 11
 $ScriptName = "PatchWinREScript_General.ps1" # If the above doesn't work or you have older Windows 10 1909 and beyond, use this one
+$FixName = "Fix-WinREPartition.ps1"
 $ScriptUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/$ScriptName"
 $updateUrl = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2024/01/windows10.0-kb5034232-x64_ff4651e9e031bad04f7fa645dc3dee1fe1435f38.cab"
-
+$FixUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/$FixName"
 $downloadPath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Remediation\HotFixKB5034441"
 
 $logFile = "$downloadPath\Remediate-HotFixKB5034441.txt"
@@ -82,7 +83,13 @@ if ($WinREStatus -match "Disabled") {
     reagentc /enable
     Add-Content -Path $logFile -Value $(reagentc /info)
 }
-
+$WinREStatus = reagentc /info | Select-String "Windows RE status"
+if ($WinREStatus -match "Enabled") {} Else {
+    Get-File -Url $FixUrl -OutputPath "$downloadPath\$FixName"
+    mkdir "$downloadPath\Backup"
+    & ".\$FixName" -BackupFolder "$downloadPath\Backup" #-SkipConfirmation $True
+    }
+    
 # Execute script with path to .cab file and working dir
 Set-Location $downloadPath
 & ".\$scriptName" -packagePath ".\update.cab" -WorkDir $downloadPath
