@@ -87,7 +87,9 @@ $WinREStatus = reagentc /info | Select-String "Windows RE status"
 if ($WinREStatus -match "Enabled") {} Else {
     Get-File -Url $FixUrl -OutputPath "$downloadPath\$FixName"
     mkdir "$downloadPath\Backup"
+    Add-Content -Path $logFile -Value "Created folder $downloadPath\Backup"
     & ".\$FixName" -BackupFolder "$downloadPath\Backup" #-SkipConfirmation $True
+    Add-Content -Path $logFile -Value "Run $FixName"
     }
     
 # Execute script with path to .cab file and working dir
