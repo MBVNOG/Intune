@@ -10,6 +10,7 @@
 # This is critical as there may be pending partition operations staged on your machine that will need to be finalized before the script can safely increase the WinRE partition size. 
 # After your machine reboots open Powershell as admin and run mkdir <path to new backup directory> to create a backup directory that the script may use in case of failure to restore the original partition. 
 # Note the location of this backup directory as the script will ask for your backup path.
+#
 ################################################################################################
 
 Param (
