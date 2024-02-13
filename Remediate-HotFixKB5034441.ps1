@@ -89,7 +89,7 @@ if ($WinREStatus -match "Enabled") {} Else {
     Get-File -Url $FixUrl -OutputPath ".\$FixName"
     mkdir ".\Backup"
     Add-Content -Path $logFile -Value "Created folder $downloadPath\Backup"
-    & ".\$FixName" -BackupFolder ".\Backup" #-SkipConfirmation $True
+    & ".\$FixName" -BackupFolder ".\Backup" -SkipConfirmation $True
     Add-Content -Path $logFile -Value "Run $FixName"
     }
     
