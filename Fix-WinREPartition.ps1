@@ -29,6 +29,58 @@ function LogMessage([string]$message)
     $message = "$([DateTime]::Now) - $message"
     Write-Output $message | Out-File $logFile -append               
 }
+# Download file
+$dpsoName = "diskpart-shrink-OS.txt"
+$dpcrName = "diskpart-create-recovery.txt"
+$dpsoUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/$dpsoName"
+$dpcrUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/$dpcrName"
+$downloadPath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Remediation\HotFixKB5034441"
+
+# Function to check connection
+function Test-ConnectionToUrl {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Url
+    )
+    try {
+        $request = [Net.WebRequest]::Create($Url)
+        $response = $request.GetResponse()
+        $response.Close()
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+# Function to download script and .cab file
+function Get-File {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Url,
+        [Parameter(Mandatory=$true)]
+        [string]$OutputPath
+    )
+    $maxAttempts = 3
+    for ($i = 1; $i -le $maxAttempts; $i++) {
+        try {
+            Invoke-WebRequest -Uri $Url -OutFile $OutputPath
+            Add-Content -Path $logFile -Value "Download succeeded: $Url"
+            break
+        }
+        catch {
+            if ($i -eq $maxAttempts) {
+                Add-Content -Path $logFile -Value "Download failed after $maxAttempts attempts: $Url"
+                throw
+            }
+            if (!(Test-ConnectionToUrl -Url $Url)) {
+                Add-Content -Path $logFile -Value "Connection failed, please retry..."
+                Start-Sleep -Seconds 5
+            }
+            else {throw}
+        }
+    }
+}
 # Extract numbers from string
 function ExtractNumbers([string]$str)
 {
@@ -92,8 +144,17 @@ $WinREStatus = $InitialWinREStatus[0]
 $WinRELocation = $InitialWinREStatus[1]
 if (!$WinREStatus)
 {
-	LogMessage("Error: WinRE Disabled")
-	exit 1
+	# Create new recovery
+    	Add-Content -Path $logFile -Value "create new recovery"
+     	Get-File -Url $dpsoUrl -OutputPath ".\$dpsoName"
+      	Get-File -Url $dpcrUrl -OutputPath ".\$dpcrName"
+	#diskpart /s ".\diskpart-delete-WinRE.txt"
+ 	diskpart /s ".\$dpsoName"
+  	diskpart /s ".\$dpcrName"
+    	# Enable WinRE
+     	Add-Content -Path $logFile -Value "Enabling WinRE"
+    	reagentc /enable
+    	Add-Content -Path $logFile -Value $(reagentc /info)
 }
 # Get System directory and ReAgent xml file
 $system32Path = [System.Environment]::SystemDirectory
