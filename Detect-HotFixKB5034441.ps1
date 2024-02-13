@@ -4,6 +4,15 @@
 # Description:     Purpose of this script is to detect if HotFix KB5034441 is not installed
 #
 #=============================================================================================================================
+$downloadPath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Remediation\HotFixKB5034441"
+$logFile = "$downloadPath\Detect-HotFixKB5034441.txt"
+if (-not (Test-Path $logFile)) {Write-Output "Logfile for Detect-HotFixKB5034441.ps1" | Out-File $logFile}
+
+function LogMessage([string]$message)
+{
+    $message = "$([DateTime]::Now) - $message"
+    Write-Output $message | Out-File $logFile -append  
+    
 # Main script
 
 if (Test-Path HKLM:\Software\Microsoft\PushButtonReset)
