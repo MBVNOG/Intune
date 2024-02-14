@@ -15,6 +15,7 @@ function LogMessage([string]$message)
  }   
 # Main script
 
+<#
 if (Test-Path HKLM:\Software\Microsoft\PushButtonReset)
 {
     $values = Get-ItemProperty -Path HKLM:\Software\Microsoft\PushButtonReset
@@ -31,6 +32,7 @@ if (Test-Path HKLM:\Software\Microsoft\PushButtonReset)
         }
     }
 }
+#>
 # Detect if Hotfix KB5034441 is installed
 $Update = Get-HotFix -Id KB5034441 -ErrorAction SilentlyContinue
 if ($Update -eq $null) {
