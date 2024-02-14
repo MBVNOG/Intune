@@ -12,7 +12,7 @@ function LogMessage([string]$message)
 {
     $message = "$([DateTime]::Now) - $message"
     Write-Output $message | Out-File $logFile -append  
-    
+ }   
 # Main script
 
 if (Test-Path HKLM:\Software\Microsoft\PushButtonReset)
