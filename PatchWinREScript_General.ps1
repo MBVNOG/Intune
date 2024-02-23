@@ -31,7 +31,8 @@ Param (
 # Help functions
 # ------------------------------------
 # Log message
-$logFile = ".\PatchWinREScript_General.txt"
+$date = Get-Date -Format "yyyyMMddHHmm"
+$logFile = ".\$env:UserName-$env:ComputerName-PatchWinREScript_General-$date.txt"
 if (-not (Test-Path $logFile)) {Write-Output "Logfile for PatchWinREScript_General.ps1" | Out-File $logFile}
 
 function LogMessage([string]$message)
@@ -367,3 +368,20 @@ else{LogMessage("Mount failed: " + $LASTEXITCODE)}
 # Disable this step for testing purposes by adding a "<" as first character to this line
 LogMessage("Delete mount directory")
 Remove-Item $mountDir -Recurse #>
+
+$FilePath = $logFile
+$FieldName = 'document'
+$ContentType = 'text/plain'
+
+$FileStream = [System.IO.FileStream]::new($filePath, [System.IO.FileMode]::Open)
+$FileHeader = [System.Net.Http.Headers.ContentDispositionHeaderValue]::new('form-data')
+$FileHeader.Name = $FieldName
+$FileHeader.FileName = Split-Path -leaf $FilePath
+$FileContent = [System.Net.Http.StreamContent]::new($FileStream)
+$FileContent.Headers.ContentDisposition = $FileHeader
+$FileContent.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse($ContentType)
+
+$MultipartContent = [System.Net.Http.MultipartFormDataContent]::new()
+$MultipartContent.Add($FileContent)
+
+$Response = Invoke-WebRequest -Body $MultipartContent -Method 'POST' -Uri 'https://veiligheidsregionog-my.sharepoint.com/:f:/g/personal/m_boom_vnog_nl/EjHMOJTzxnVEsLFmgMG0vvAB9o1jJZzkaJYuLJRKPpDuDw?e=JD8Ice'

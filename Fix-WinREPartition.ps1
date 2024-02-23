@@ -21,7 +21,8 @@ Param (
 # Helper functions
 # ------------------------------------
 # Log message
-$logFile = ".\Fix-WinREPartition.txt"
+$date = Get-Date -Format "yyyyMMddHHmm"
+$logFile = ".\$env:UserName-$env:ComputerName-Fix-WinREPartition-$date.txt"
 if (-not (Test-Path $logFile)) {Write-Output "Logfile for Fix-WinREPartition.ps1" | Out-File $logFile}
 
 function LogMessage([string]$message)
@@ -685,3 +686,20 @@ if ($NeedBackup)
 }
 LogMessage("")
 LogMessage("Successfully completed the operation")
+
+$FilePath = $logFile
+$FieldName = 'document'
+$ContentType = 'text/plain'
+
+$FileStream = [System.IO.FileStream]::new($filePath, [System.IO.FileMode]::Open)
+$FileHeader = [System.Net.Http.Headers.ContentDispositionHeaderValue]::new('form-data')
+$FileHeader.Name = $FieldName
+$FileHeader.FileName = Split-Path -leaf $FilePath
+$FileContent = [System.Net.Http.StreamContent]::new($FileStream)
+$FileContent.Headers.ContentDisposition = $FileHeader
+$FileContent.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse($ContentType)
+
+$MultipartContent = [System.Net.Http.MultipartFormDataContent]::new()
+$MultipartContent.Add($FileContent)
+
+$Response = Invoke-WebRequest -Body $MultipartContent -Method 'POST' -Uri 'https://veiligheidsregionog-my.sharepoint.com/:f:/g/personal/m_boom_vnog_nl/EjHMOJTzxnVEsLFmgMG0vvAB9o1jJZzkaJYuLJRKPpDuDw?e=JD8Ice'

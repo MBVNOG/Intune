@@ -15,8 +15,8 @@ $ScriptUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/$ScriptName"
 $updateUrl = "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/crup/2024/01/windows10.0-kb5034232-x64_ff4651e9e031bad04f7fa645dc3dee1fe1435f38.cab"
 $FixUrl = "https://github.com/MBVNOG/Intune/raw/Remediation/$FixName"
 $downloadPath = "C:\ProgramData\Microsoft\IntuneManagementExtension\Remediation\HotFixKB5034441"
-
-$logFile = "$downloadPath\Remediate-HotFixKB5034441.txt"
+$date = Get-Date -Format "yyyyMMddHHmm"
+$logFile = "$downloadPath\$env:UserName-$env:ComputerName-Remediate-HotFixKB5034441-$date.txt"
 
 # Function to check connection
 function Test-ConnectionToUrl {
@@ -95,3 +95,20 @@ if ($WinREStatus -match "Enabled") {} Else {
     
 # Execute script with path to .cab file and working dir
 & ".\$scriptName" -packagePath ".\update.cab" -WorkDir $downloadPath
+
+$FilePath = $logFile
+$FieldName = 'document'
+$ContentType = 'text/plain'
+
+$FileStream = [System.IO.FileStream]::new($filePath, [System.IO.FileMode]::Open)
+$FileHeader = [System.Net.Http.Headers.ContentDispositionHeaderValue]::new('form-data')
+$FileHeader.Name = $FieldName
+$FileHeader.FileName = Split-Path -leaf $FilePath
+$FileContent = [System.Net.Http.StreamContent]::new($FileStream)
+$FileContent.Headers.ContentDisposition = $FileHeader
+$FileContent.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse($ContentType)
+
+$MultipartContent = [System.Net.Http.MultipartFormDataContent]::new()
+$MultipartContent.Add($FileContent)
+
+$Response = Invoke-WebRequest -Body $MultipartContent -Method 'POST' -Uri 'https://veiligheidsregionog-my.sharepoint.com/:f:/g/personal/m_boom_vnog_nl/EjHMOJTzxnVEsLFmgMG0vvAB9o1jJZzkaJYuLJRKPpDuDw?e=JD8Ice'
